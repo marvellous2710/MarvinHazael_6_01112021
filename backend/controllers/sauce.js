@@ -57,57 +57,69 @@ exports.getAllSauces = (req, res, next) => {
 
 
 exports.likeDislike = (req, res, next) => {
+
+  let like = req.body.like;
+  let userId = req.body.userId;
+
+
   Sauce.findOne({ _id: req.params.id })
       .then(sauce => {
-        let like = request.body.like;
-        let userLike = sauce.usersLiked;
-        let userId = request.body.userId;
 
-        if (like === 1) {
-          // on incrémente le compteur de like
+        let userLiked = sauce.usersLiked;
+
+         if (like === 1 && !userLiked.includes(userId)) {
+           // on incrémente le compteur de like
           sauce.likes++;
 
           // on ajout l'id utilisateur dans usersLike
-          userId.push(userLike);
+          userLiked.push(userId);
 
-        }
+         }
         else if (like === 0) {
           // on détermine si l'utilisateur a like ou dislike la sauce
           // on décrémente la propriété qui va bien (like/dislike)
+          sauce.likes;
+
           // on supprime du tableau qui va bien (usersLike/usersDislike) l'identifiant du user
-        } else if (like === -1) {
+          userLiked.remove(userId);
+
+
+
+        } else if (like === -1 && !userLiked.includes(userId)) {
+
           // on incrémente le compteur de dislike
+          sauce.likes--;
+
           // on ajout l'id utilisateur dans usersDislike
+          userLiked.push(userId);
+
         }
         else {
           //error
         }
 
-        switch (like) {
-          case 1:
 
-          break;
-          case 0:
+        //---------------DEBUT A CHOISIR SI ON PREFERE IF/ELSE OU SWITCH/CASE UNE FOIS COMPRIS AVEC LE IF/ELSE
+        // switch (like) {
+        //   case 1:
 
-          break;
-          case -1:
+        //   break;
+        //   case 0:
 
-          break;
-          default:
-            //error => statusCode 401 (bad request)
-        }
+        //   break;
+        //   case -1:
 
-        switch(true){
-          case like === 1:
+        //   break;
+        //   default:
+        //     //error => statusCode 401 (bad request)
+        // }
+        //______________________FIN_A CHOI SIR___________________________//
 
-          break;
-          case like === 0:
+        //  sauce.save()
+        //  .then(() => res.status(201).json({ message: 'sauc'}))
+        //  .catch(error => res.status(400).json({ error }));
+      })
 
-          break;
-        }
-      });
 
-    // sauce.save()
-    // .then(() => res.status(201).json({ message: 'sauce liké'}))
-    // .catch(error => res.status(400).json({ error }));
-}
+    .catch(error => res.status(400).json({ error }));
+};
