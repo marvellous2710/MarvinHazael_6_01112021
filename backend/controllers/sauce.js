@@ -12,18 +12,18 @@ exports.createSauce = (req, res, next) => {
     });
     sauce.save()
         .then(() => res.status(201).json({ message: 'Sauce enregistrée !'}))
-        .catch(error => res.status(400).json({ error }));
+        .catch(error => res.status(500).json({ error }));
 }
 
 exports.modifySauce =  (req, res, next) => {
-  const sauceObject = req.file ?
+  const sauceObject = req.file ?// ? = si il existe...
   {
     ...JSON.parse(req.body.sauce),
     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
   } : { ...req.body };
     Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
       .then(() => res.status(200).json({ message: 'Sauce modifiée !'}))
-      .catch(error => res.status(400).json({ error }));
+      .catch(error => res.status(500).json({ error }));
 }
 
 exports.deleteSauce =  (req, res, next) => {
@@ -83,8 +83,6 @@ exports.likeDislike = (req, res, next) => {
           // on supprime du tableau qui va bien (usersLike/usersDislike) l'identifiant du user
           userLiked.remove(userId);
 
-
-
         } else if (like === -1 && !userLiked.includes(userId)) {
 
           // on incrémente le compteur de dislike
@@ -115,11 +113,11 @@ exports.likeDislike = (req, res, next) => {
         // }
         //______________________FIN_A CHOI SIR___________________________//
 
-        //  sauce.save()
-        //  .then(() => res.status(201).json({ message: 'sauc'}))
-        //  .catch(error => res.status(400).json({ error }));
+         sauce.save()
+         .then((sauce) => res.status(201).json(sauce))
+         .catch(error => res.status(400).json({ error }));
       })
 
 
-    .catch(error => res.status(400).json({ error }));
+    .catch(error => res.status(500).json({ error }));
 };
