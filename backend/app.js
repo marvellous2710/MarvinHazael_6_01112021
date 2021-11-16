@@ -4,15 +4,11 @@ const mongoose    = require('mongoose');
 const path        = require('path');
 const sauceRoutes = require('./routes/sauce');
 const userRoutes  = require ('./routes/user');
-
-const dotenv = require("dotenv");
+const dotenv       = require("dotenv");
 dotenv.config();
-// const result = dotenv.config();
 
 
-
-//connexion mongoDB avec mongoose
-//mongoose.connect('mongodb+srv://piquante:piquante@cluster0.5calt.mongodb.net/test',
+//connexion mongoDB avec mongoose via dotenv pour plus de sécurité
 mongoose.connect(process.env.DB_CONNECTION,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
@@ -30,9 +26,7 @@ app.use((req, res, next) => {
 
 
 app.use(express.json());//transforme le corps de la requete en objet javascript utilisable
-
 app.use('/images', express.static(path.join(__dirname, 'images')));
-
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 
